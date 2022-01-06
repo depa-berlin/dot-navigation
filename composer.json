@@ -1,5 +1,5 @@
 {
-    "name": "dotkernel/dot-navigation",
+    "name": "depa/dot-navigation",
     "type": "library",
     "description": "DotKernel navigation component",
     "license": "MIT",
@@ -13,8 +13,8 @@
     ],
     "authors": [
         {
-            "name": "DotKernel Team",
-            "email": "team@dotkernel.com"
+            "name": "depa",
+            "email": "info@designpark.de"
         }
     ],
     "require": {
