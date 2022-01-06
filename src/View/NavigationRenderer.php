@@ -10,6 +10,7 @@ declare(strict_types = 1);
 namespace Dot\Navigation\View;
 
 use Dot\Navigation\NavigationContainer;
+use Dot\Navigation\Page;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Service\Navigation;
 use Mezzio\Template\TemplateRendererInterface;
@@ -65,7 +66,59 @@ class NavigationRenderer extends AbstractNavigationRenderer
      */
     public function render($container): string
     {
+        $container = $this->getContainer($container);
+        $navListArray = $this->renderNavList($container);
+        $template = "<!--<ul>-->".$navListArray['template']."<!--</ul>-->";
+
+
         // TODO: render a default HTML menu structure
-        return '';
+        return $template;
+    }
+
+    private function renderNavList($container)
+    {
+        $template='';
+        $ret=[];
+        $isActiveStatus = false;
+        foreach ($container as $page) {
+            /* @var $page Page */
+            $liClass="";
+            if(!is_null($page->getOption('class'))){
+                $liClass = $page->getOption('class');
+            }
+            if ($this->navigation->isActive($page)) {
+                $liClass .= ' active';
+                $isActiveStatus = true;
+            }
+            if($page->hasChildren())
+            {
+                $href=$page->getOption('uri');
+            }
+            else{
+                $href = $this->navigation->getHref($page);
+            }
+            $target='';
+            if(!is_null($page->getOption('target') ))
+            {
+                $target="target='{$page->getOption('target')}'";
+            }
+
+            if($page->hasChildren()){
+                $navListArray = $this->renderNavList($page);
+                if ($navListArray['isActive']){
+                    $liClass = 'active';
+                }
+            }
+
+            $template.="<li class='$liClass'><a href='$href' $target>{$page->getOption('label')}</a>";
+            if($page->hasChildren()){
+               $template.="<ul>{$navListArray['template']}</ul>";
+            }
+            $template.='</li>';
+        }
+        $ret['template'] = $template;
+        $ret['isActive'] = $isActiveStatus;
+
+        return $ret;
     }
 }
