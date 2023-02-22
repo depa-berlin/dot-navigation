@@ -65,7 +65,7 @@ class NavigationContainer implements \RecursiveIterator
     /**
      * Increment current position to the next element
      */
-    public function next()
+    public function next(): void
     {
         $this->index++;
     }
@@ -89,7 +89,7 @@ class NavigationContainer implements \RecursiveIterator
     /**
      * Reset position to the first element
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->index = 0;
     }
